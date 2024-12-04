@@ -117,6 +117,54 @@ def part2(input_file: str) -> None:
             safe_total += 1
     print(safe_total)
 
+def part2_2(input_file: str) -> None:
+    safe_total = 0
+    queue = []
+    with open(input_file, 'r', encoding='utf-8') as reports:
+        for line in reports.readlines():
+            # print(line)
+            levels = [int(i) for i in line.strip().split()]
+            a, d = 0, 0
+            for i in range(len(levels) - 1):
+                if levels[i] < levels[i + 1]:
+                    a += 1
+                if levels[i] > levels[i + 1]:
+                    d += 1
+                if a > d:
+                    ascending = True
+                else:
+                    ascending = False
+            queue.append(tuple((levels, ascending, True)))
+
+    while len(queue) > 0:
+        levels, ascending, problem_dampener = queue.pop(0)
+        # print(levels, problem_dampener)
+        # ascending = False
+        # if int(levels[0]) < int(levels[1]):
+        #     ascending = True
+        safe = True
+
+        for i in range(-1, len(levels)):
+            curr_level = levels[i]
+            next_level = levels[i + 1]
+            if next_level < curr_level and ascending:
+                safe = False
+            elif next_level > curr_level and not ascending:
+                safe = False
+
+            diff = abs(curr_level - next_level)
+            if diff < 1 or diff > 3:
+                safe = False
+            
+            if not safe:
+                if problem_dampener:
+                    levels.pop(i)
+                    queue.append(tuple((levels, ascending, False)))
+                break
+        if safe:
+            safe_total += 1
+    print(safe_total)
+
 def parse_input():
     parser = argparse.ArgumentParser()
     parser.add_argument('input_file', type=str)
@@ -127,7 +175,7 @@ def parse_input():
 def main():
     args = parse_input()
     part1(args.input_file)
-    part2(args.input_file)
+    part2_2(args.input_file)
 
 if __name__ == '__main__':
     main()
