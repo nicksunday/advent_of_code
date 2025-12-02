@@ -57,18 +57,26 @@ func part2(lines []string) int {
 		} else {
 			direction = 1
 		}
+
 		number, err := strconv.Atoi(string(line[1:]))
 		if err != nil {
 			panic(err)
 		}
-		freespins := number / 100
-		number = number % 100
-		ans += freespins
-		dial = dial + (direction * number)
-		if dial != 0 && (dial <= 0 || dial >= 100) {
-			ans += 1
+
+		for _ = range number {
+			dial = dial + direction
+
+			if dial >= 100 {
+				dial = dial - 100
+			}
+			if dial < 0 {
+				dial = dial + 100
+			}
+
+			if dial == 0 {
+				ans += 1
+			}
 		}
-		dial = dial % 100
 	}
 	return ans
 }
