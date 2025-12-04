@@ -49,7 +49,7 @@ run year day input="":
     cd "$dir"
     
     if [[ -f "main.go" ]]; then
-        go run . {{input}}
+        go run main.go {{input}}
     elif [[ -f "solution.py" ]]; then
         python solution.py {{input}}
     else
